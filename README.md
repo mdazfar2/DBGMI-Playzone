@@ -70,9 +70,9 @@ The goal of DBGMI Tournament is to organize and promote competitive BGMI matches
 </a>
 
 </p>
-<br>
 
-<!-- Open Source Programs -->
+
+<!-- Open Source Programs 
   <div>
     <h2><img src="https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/blob/master/Emojis/Hand%20gestures/Flexed%20Biceps.png?raw=true" width="35" height="35" > Open Source Programs</h2>
   </div>
@@ -95,10 +95,12 @@ The goal of DBGMI Tournament is to organize and promote competitive BGMI matches
 
 ---
 
+-->
+
 <div align="left">
 <h2><font size="6"><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Handshake.png" alt="Handshake" width="40" height="40" /> Want to Contribute? </font></h2>
 </div>
-<br>
+
 
 I welcome contributions to DBGMI-Playzone! If you're interested in contributing, please follow [CONTRIBUTING guidelines](https://github.com/mdazfar2/DBGMI-Playzone/blob/main/CONTRIBUTING.md) to ensure a smooth and collaborative process:
 
