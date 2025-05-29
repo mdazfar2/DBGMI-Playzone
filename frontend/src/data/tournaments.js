@@ -1,30 +1,7 @@
 // Mock upcoming tournaments data
 export const upcomingTournaments = [
   {
-    id: 't1',
-    name: 'DBGMI Solo Cup',
-    date: '2025-06-15',
-    time: '18:00',
-    map: 'Erangel',
-    mode: 'Solo',
-    entryFee: 50,
-    prizePools: [
-      { position: 1, amount: 2000 },
-      { position: 2, amount: 1000 },
-      { position: 3, amount: 500 },
-    ],
-    slots: 100,
-    registeredPlayers: 45,
-    isRegistrationOpen: true,
-    rules: [
-      'No hackers or emulators allowed',
-      'Players must be on time',
-      'Match will be streamed live',
-      'Tournament room ID and password will be shared 15 minutes before the match',
-    ]
-  },
-  {
-    id: 't2',
+    id: 1, // Must match mockTeams key
     name: 'DBGMI Squad Showdown',
     date: '2025-06-18',
     time: '20:00',
@@ -48,8 +25,8 @@ export const upcomingTournaments = [
     ]
   },
   {
-    id: 't3',
-    name: 'DBGMI Duo Challenge',
+    id: 2,
+    name: 'DBGMI Duo Clash',
     date: '2025-06-20',
     time: '19:00',
     map: 'Miramar',
@@ -62,6 +39,29 @@ export const upcomingTournaments = [
     ],
     slots: 50,
     registeredPlayers: 22,
+    isRegistrationOpen: true,
+    rules: [
+      'No hackers or emulators allowed',
+      'Players must be on time',
+      'Match will be streamed live',
+      'Tournament room ID and password will be shared 15 minutes before the match',
+    ]
+  },
+  {
+    id: 3,
+    name: 'DBGMI Solo Royale',
+    date: '2025-06-15',
+    time: '18:00',
+    map: 'Erangel',
+    mode: 'Solo',
+    entryFee: 50,
+    prizePools: [
+      { position: 1, amount: 2000 },
+      { position: 2, amount: 1000 },
+      { position: 3, amount: 500 },
+    ],
+    slots: 100,
+    registeredPlayers: 45,
     isRegistrationOpen: true,
     rules: [
       'No hackers or emulators allowed',

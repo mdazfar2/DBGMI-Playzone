@@ -170,10 +170,14 @@ const AdminDashboard = () => {
   };
 
   const toggleTeamExpansion = (teamId) => {
-    setExpandedTeams(prev => ({
-      ...prev,
-      [teamId]: !prev[teamId]
-    }));
+    setExpandedTeams(prev => {
+      // If the clicked team is already open, close it
+      if (prev[teamId]) {
+        return {};
+      }
+      // Otherwise, open only this team
+      return { [teamId]: true };
+    });
   };
 
   const handleBackToDashboard = () => {
@@ -470,9 +474,6 @@ const AdminDashboard = () => {
                                 )}
                               </Button>
                             )}
-                            <Button variant="danger" size="sm">
-                              Remove
-                            </Button>
                           </div>
                         </td>
                       </tr>
