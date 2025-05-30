@@ -693,7 +693,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
-              Phone Number *
+              Contact Number / WhatsApp *
             </label>
             <div className="relative">
               <input
@@ -702,7 +702,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                placeholder="Enter your phone number"
+                placeholder="Your 10-digit mobile number"
               />
               <Smartphone className="absolute right-3 top-3.5 text-gray-400" size={18} />
             </div>
