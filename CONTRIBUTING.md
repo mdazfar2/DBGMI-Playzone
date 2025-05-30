@@ -51,7 +51,7 @@ To run the project locally and start contributing:
 - Clone the repo
 
 ```bash
-git clone https://github.com/your-username/DBGMI-Tournament.git
+git clone https://github.com/your-username/DBGMI-Playzone.git
 ```
 - Navigate to the frontend directory
 
@@ -116,7 +116,8 @@ npm run dev
 
 ---
 
-## 🔧 Want to Contribute to Backend?
+
+# 🔧 Want to Contribute to Backend?
 
 If you’re here to contribute to backend integration, we’re super excited to have you! 🎉
 
