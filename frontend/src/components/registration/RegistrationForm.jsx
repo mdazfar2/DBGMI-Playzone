@@ -94,17 +94,7 @@ const RegistrationForm = () => {
     } else if (!isValidBgmiUid(formData.bgmiUID)) {
       newErrors.bgmiUID = 'Invalid BGMI UID format (10-12 digits)';
     }
-    
-    if (!formData.contactNumber.trim()) {
-      newErrors.contactNumber = 'Contact number is required';
-    } else if (!isValidIndianPhoneNumber(formData.contactNumber)) {
-      newErrors.contactNumber = 'Invalid Indian phone number';
-    }
-    
-    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
-    }
-    
+
     // Validate team members
     if (tournament?.mode !== 'Solo') {
       formData.teamMembers.forEach((member, index) => {
@@ -134,7 +124,7 @@ const RegistrationForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       setShowPayment(true);
     }
