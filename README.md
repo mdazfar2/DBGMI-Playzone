@@ -3,11 +3,13 @@
 <p align="center">
  <a href="https://github.com/mdazfar2/DBGMI-Playzone"><img src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103"></a>
      <a href="https://github.com/mdazfar2/"><img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg?v=103"></a>
-<a href="https://github.com/mdazfar2/DBGMI-Playzone/blob/main/LICENSE"><img src="https://img.shields.io/badge/MIT-Licence-blue.svg?v=103"></a>  
+<a href="https://github.com/mdazfar2/DBGMI-Playzone/blob/main/LICENSE"><img src="https://img.shields.io/badge/MIT-Licence-blue.svg?v=103"></a>
+<img src="https://api.visitorbadge.io/api/visitors?path=mdazfar2%2FDBGMI-Playzone%20&countColor=%23263759&style=flat" alt="Visitors"/>
     <a href="https://github.com/mdazfar2/DBGMI-Playzone/graphs/contributors"><img src="https://img.shields.io/github/contributors/mdazfar2/DBGMI-Playzone?color=brightgreen"></a>
     <a href="https://github.com/mdazfar2/DBGMI-Playzone/stargazers"><img src="https://img.shields.io/github/stars/mdazfar2/DBGMI-Playzone?color=0059b3"></a>
 <a href="https://github.com/mdazfar2/DBGMI-Playzone/network/members"><img src="https://img.shields.io/github/forks/mdazfar2/DBGMI-Playzone?color=yellow"></a>
 <a href="https://github.com/mdazfar2/DBGMI-Playzone/issues"><img src="https://img.shields.io/github/issues/mdazfar2/DBGMI-Playzone?color=0059b3"></a>
+</p>
 
 <hr/>
 
