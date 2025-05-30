@@ -104,7 +104,15 @@ The goal of DBGMI Tournament is to organize and promote competitive BGMI matches
 </div>
 
 
-I welcome contributions to DBGMI-Playzone! If you're interested in contributing, please follow [CONTRIBUTING guidelines](https://github.com/mdazfar2/DBGMI-Playzone/blob/main/CONTRIBUTING.md) to ensure a smooth and collaborative process:
+I welcome contributors from the Developer and Gaming communities join us to make **DBGMI-Playzone** better for everyone! Please follow our [CONTRIBUTING guidelines](https://github.com/mdazfar2/DBGMI-Playzone/blob/main/CONTRIBUTING.md) for the following:-
+
+***Want to contribute to our website you must have to read [Contributing Guidelines](https://github.com/mdazfar2/DBGMI-Playzone/blob/main/CONTRIBUTING.md).***
+
+- Setup DBGMI-Playzone on your local machine
+- Enhance tournament schedule, match details, payments
+- Improve admin panel for tournament management
+- Fix bugs, documentation, UI/UX
+- And more!
 
 <h2>Code Of Conduct📑</h2>
 
