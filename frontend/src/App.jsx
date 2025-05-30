@@ -11,6 +11,7 @@ import RulesPage from './pages/RulesPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ContactPage from './pages/ContactPage';
 import AdminPage from './pages/AdminPage';
+import RegistrationForm from './components/registration/RegistrationForm';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
             <Route path="/tournaments" element={<TournamentsPage />} />
             <Route path="/tournaments/:id" element={<TournamentDetailsPage />} />
             <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/register/:tournamentId" element={<RegistrationPage />} />
+            <Route path="/register/:tournamentId" element={<RegistrationForm />} />
             <Route path="/registration-success" element={<RegistrationSuccessPage />} />
             <Route path="/rules" element={<RulesPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />

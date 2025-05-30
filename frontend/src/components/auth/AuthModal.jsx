@@ -11,7 +11,6 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [loginStep, setLoginStep] = useState('email');
   const [signupStep, setSignupStep] = useState('contact');
   const [isLoading, setIsLoading] = useState(false);
-  const [forgotPasswordStep, setForgotPasswordStep] = useState('email');
   
   // Form states
   const [email, setEmail] = useState('');
@@ -38,7 +37,6 @@ const AuthModal = ({ isOpen, onClose }) => {
     setFavoriteMap('');
     setLoginStep('email');
     setSignupStep('contact');
-    setForgotPasswordStep('email');
     setIsLoading(false);
   };
   
@@ -89,17 +87,13 @@ const AuthModal = ({ isOpen, onClose }) => {
         }
       });
       
-      if (loginStep === 'forgotPassword') {
-        setForgotPasswordStep('otp');
-      } else {
-        setLoginStep('password');
-      }
+      setSignupStep('verification');
     }, 1500);
   };
   
   const handleLogin = () => {
-    if (!password) {
-      toast.error('Please enter your password', {
+    if (!verifyOtp(otp)) {
+      toast.error('Invalid OTP. Please try again.', {
         style: {
           background: '#ef4444',
           color: '#fff',
@@ -128,72 +122,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       });
       handleClose();
     }, 1500);
-  };
-  
-  const handleResetPassword = () => {
-    if (!password || !confirmPassword) {
-      toast.error('Please fill in all required fields', {
-        style: {
-          background: '#ef4444',
-          color: '#fff',
-        },
-        iconTheme: {
-          primary: '#fff',
-          secondary: '#ef4444',
-        }
-      });
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match', {
-        style: {
-          background: '#ef4444',
-          color: '#fff',
-        },
-        iconTheme: {
-          primary: '#fff',
-          secondary: '#ef4444',
-        }
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    // Simulate password reset
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success('Password reset successfully! Please login with your new password.', {
-        style: {
-          background: '#10b981',
-          color: '#fff',
-        },
-        iconTheme: {
-          primary: '#fff',
-          secondary: '#10b981',
-        }
-      });
-      setLoginStep('email');
-      setForgotPasswordStep('email');
-    }, 1500);
-  };
-  
-  const handleForgotPasswordOtp = () => {
-    if (!verifyOtp(otp)) {
-      toast.error('Invalid OTP. Please try again.', {
-        style: {
-          background: '#ef4444',
-          color: '#fff',
-        },
-        iconTheme: {
-          primary: '#fff',
-          secondary: '#ef4444',
-        }
-      });
-      return;
-    }
-    
-    setForgotPasswordStep('newPassword');
   };
   
   const handleSignupNext = () => {
@@ -316,16 +244,8 @@ const AuthModal = ({ isOpen, onClose }) => {
         if (activeTab === 'login') {
           if (loginStep === 'email') {
             handleSendOtp();
-          } else if (loginStep === 'password') {
+          } else {
             handleLogin();
-          } else if (loginStep === 'forgotPassword') {
-            if (forgotPasswordStep === 'email') {
-              handleSendOtp();
-            } else if (forgotPasswordStep === 'otp') {
-              handleForgotPasswordOtp();
-            } else {
-              handleResetPassword();
-            }
           }
         } else {
           handleSignupNext();
@@ -335,7 +255,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, activeTab, loginStep, signupStep, forgotPasswordStep, email, otp, phone, firstName, lastName, password, confirmPassword, dob, city, favoriteMap]);
+  }, [isOpen, activeTab, loginStep, signupStep, email, otp, phone, firstName, lastName, password, confirmPassword, dob, city, favoriteMap]);
   
   const renderLoginContent = () => {
     if (loginStep === 'email') {
@@ -368,7 +288,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             onClick={handleSendOtp} 
             fullWidth
             isLoading={isLoading}
-            loadingText="Verifying..."
+            loadingText="Sending OTP..."
           >
             Continue
           </Button>
@@ -395,223 +315,59 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
         </div>
       );
-    } else if (loginStep === 'password') {
-      return (
-        <div className="space-y-5">
-          <div className="text-center mb-2">
-            <h3 className="text-xl font-bold text-white">Welcome Back, Soldier</h3>
-            <p className="text-gray-400 text-sm mt-1">Enter your password to continue</p>
-          </div>
-          
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                placeholder="Enter your password"
-              />
-              <Lock className="absolute right-3 top-3.5 text-gray-400" size={18} />
-            </div>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <button
-              onClick={() => {
-                setLoginStep('forgotPassword');
-                setForgotPasswordStep('email');
-              }}
-              className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
-            >
-              Forgot Password?
-            </button>
-            
-            <button
-              onClick={() => handleTabChange('signup')}
-              className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
-            >
-              Create New Account
-            </button>
-          </div>
-          
-          <Button 
-            variant="primary" 
-            onClick={handleLogin} 
-            fullWidth
-            isLoading={isLoading}
-            loadingText="Logging in..."
-          >
-            Login
-          </Button>
-        </div>
-      );
-    } else if (loginStep === 'forgotPassword') {
-      if (forgotPasswordStep === 'email') {
-        return (
-          <div className="space-y-5">
-            <div className="text-center mb-2">
-              <h3 className="text-xl font-bold text-white">Reset Your Password</h3>
-              <p className="text-gray-400 text-sm mt-1">Enter the email you used to create your account</p>
-            </div>
-            
-            <div>
-              <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-300 mb-1">
-                Email Address
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  id="forgot-email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                  placeholder="Enter your email"
-                />
-                <Mail className="absolute right-3 top-3.5 text-gray-400" size={18} />
-              </div>
-            </div>
-            
-            <Button 
-              variant="primary" 
-              onClick={handleSendOtp} 
-              fullWidth
-              isLoading={isLoading}
-              loadingText="Sending OTP..."
-            >
-              Send OTP
-            </Button>
-            
-            <div className="text-center">
-              <button
-                onClick={() => setLoginStep('password')}
-                className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
-              >
-                Back to Login
-              </button>
-            </div>
-          </div>
-        );
-      } else if (forgotPasswordStep === 'otp') {
-        return (
-          <div className="space-y-5">
-            <div className="text-center mb-2">
-              <h3 className="text-xl font-bold text-white">Verify Your Identity</h3>
-              <p className="text-gray-400 text-sm mt-1">We sent a code to {email}</p>
-            </div>
-            
-            <div>
-              <label htmlFor="forgot-otp" className="block text-sm font-medium text-gray-300 mb-1">
-                Enter OTP
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  id="forgot-otp"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                  placeholder="Enter 6-digit OTP"
-                  maxLength={6}
-                />
-                <Shield className="absolute right-3 top-3.5 text-gray-400" size={18} />
-              </div>
-            </div>
-            
-            <Button 
-              variant="primary" 
-              onClick={handleForgotPasswordOtp} 
-              fullWidth
-              isLoading={isLoading}
-              loadingText="Verifying..."
-            >
-              Verify OTP
-            </Button>
-            
-            <div className="text-center">
-              <button
-                onClick={() => {
-                  handleSendOtp();
-                  toast('OTP resent successfully!', {
-                    icon: '🔄',
-                    position: 'bottom-center',
-                  });
-                }}
-                className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
-              >
-                Resend OTP
-              </button>
-            </div>
-          </div>
-        );
-      } else {
-        return (
-          <div className="space-y-5">
-            <div className="text-center mb-2">
-              <h3 className="text-xl font-bold text-white">Set New Password</h3>
-              <p className="text-gray-400 text-sm mt-1">Set your new password and remember it</p>
-            </div>
-            
-            <div>
-              <label htmlFor="new-password" className="block text-sm font-medium text-gray-300 mb-1">
-                New Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  id="new-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                  placeholder="Enter new password (min 8 characters)"
-                />
-                <Lock className="absolute right-3 top-3.5 text-gray-400" size={18} />
-              </div>
-            </div>
-            
-            <div>
-              <label htmlFor="confirm-new-password" className="block text-sm font-medium text-gray-300 mb-1">
-                Confirm New Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  id="confirm-new-password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                  placeholder="Confirm your new password"
-                />
-                <Lock className="absolute right-3 top-3.5 text-gray-400" size={18} />
-              </div>
-            </div>
-            
-            <Button 
-              variant="primary" 
-              onClick={handleResetPassword} 
-              fullWidth
-              isLoading={isLoading}
-              loadingText="Resetting..."
-            >
-              Reset Password
-            </Button>
-            
-            <div className="text-center">
-              <button
-                onClick={() => setLoginStep('password')}
-                className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
-              >
-                Back to Login
-              </button>
-            </div>
-          </div>
-        );
-      }
     }
+    
+    return (
+      <div className="space-y-5">
+        <div className="text-center mb-2">
+          <h3 className="text-xl font-bold text-white">Verify Your Identity</h3>
+          <p className="text-gray-400 text-sm mt-1">We sent a code to {email}</p>
+        </div>
+        
+        <div>
+          <label htmlFor="otp" className="block text-sm font-medium text-gray-300 mb-1">
+            Enter OTP
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              id="otp"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Enter 6-digit OTP"
+              maxLength={6}
+            />
+            <Shield className="absolute right-3 top-3.5 text-gray-400" size={18} />
+          </div>
+        </div>
+        
+        <Button 
+          variant="primary" 
+          onClick={handleLogin} 
+          fullWidth
+          isLoading={isLoading}
+          loadingText="Verifying..."
+        >
+          Login
+        </Button>
+        
+        <div className="text-center">
+          <button
+            onClick={() => {
+              handleSendOtp();
+              toast('OTP resent successfully!', {
+                icon: '🔄',
+                position: 'bottom-center',
+              });
+            }}
+            className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+          >
+            Resend OTP
+          </button>
+        </div>
+      </div>
+    );
   };
   
   const renderSignupContent = () => {
@@ -911,7 +667,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           isLoading={isLoading}
           loadingText="Creating Account..."
         >
-          Create DBGMI Account
+          Join DBGMI
         </Button>
       </div>
     );

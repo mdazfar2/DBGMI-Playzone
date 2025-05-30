@@ -121,17 +121,17 @@ const PaymentSimulator = ({ tournament, playerName, paymentMethod, onBack, onSuc
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      {status === 'pending' && (
-        <div className="mb-6">
-          <button 
-            onClick={onBack}
-            className="flex items-center text-gray-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft size={16} className="mr-1" />
-            Back to Registration
-          </button>
-        </div>
-      )}
+      {/* Add more margin to move the back button further down */}
+      <div className="mb-10">
+        <button 
+          onClick={onBack}
+          className="flex items-center text-gray-400 hover:text-white transition-colors"
+          style={{ marginTop: '3.9rem', position: 'relative', zIndex: 20 }}
+        >
+          <ArrowLeft size={16} className="mr-1" />
+          Back to Registration
+        </button>
+      </div>
 
       <Card>
         <div className="p-4 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">

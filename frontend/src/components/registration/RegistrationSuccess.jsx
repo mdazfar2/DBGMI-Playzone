@@ -38,7 +38,7 @@ const RegistrationSuccess = () => {
             <ul className="text-gray-400 text-sm space-y-2 text-left">
               <li className="flex">
                 <span className="mr-2">1.</span>
-                <span>You will receive tournament details on your provided contact number.</span>
+                <span>You will receive the tournament details on your homepage of the website.</span>
               </li>
               <li className="flex">
                 <span className="mr-2">2.</span>
@@ -50,7 +50,7 @@ const RegistrationSuccess = () => {
               </li>
               <li className="flex">
                 <span className="mr-2">4.</span>
-                <span>Be online at least 30 minutes before the tournament starts.</span>
+                <span>Be online at least 15 minutes before the tournament starts.</span>
               </li>
             </ul>
           </div>

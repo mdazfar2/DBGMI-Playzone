@@ -123,6 +123,6 @@ export const pastTournaments = [
 // Get tournament by ID
 export const getTournamentById = (id) => {
   return [...upcomingTournaments, ...pastTournaments].find(
-    tournament => tournament.id === id
+    tournament => String(tournament.id) === String(id)
   );
 };
