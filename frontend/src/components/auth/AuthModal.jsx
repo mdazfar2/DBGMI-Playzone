@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
-import { X, Mail, Lock, Calendar, MapPin, Map, Smartphone, Shield, User } from 'lucide-react';
+import { X, Mail, Lock, Calendar, MapPin, Map, Smartphone, Shield, User, CreditCard } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import Button from '../common/Button';
 
@@ -11,6 +11,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [loginStep, setLoginStep] = useState('email');
   const [signupStep, setSignupStep] = useState('contact');
   const [isLoading, setIsLoading] = useState(false);
+  const [forgotPasswordStep, setForgotPasswordStep] = useState('email');
   
   // Form states
   const [email, setEmail] = useState('');
@@ -23,6 +24,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [dob, setDob] = useState('');
   const [city, setCity] = useState('');
   const [favoriteMap, setFavoriteMap] = useState('');
+  const [upiId, setUpiId] = useState('');
   
   const resetForm = () => {
     setEmail('');
@@ -35,8 +37,10 @@ const AuthModal = ({ isOpen, onClose }) => {
     setDob('');
     setCity('');
     setFavoriteMap('');
+    setUpiId('');
     setLoginStep('email');
     setSignupStep('contact');
+    setForgotPasswordStep('email');
     setIsLoading(false);
   };
   
@@ -69,7 +73,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       });
       return;
     }
-    
+
     setIsLoading(true);
     // Simulate API call delay
     setTimeout(() => {
@@ -86,14 +90,21 @@ const AuthModal = ({ isOpen, onClose }) => {
           secondary: '#10b981',
         }
       });
-      
-      setSignupStep('verification');
+
+      // Fix: Set signupStep to 'verification' when on signup, not loginStep
+      if (activeTab === 'signup') {
+        setSignupStep('verification');
+      } else if (loginStep === 'forgotPassword') {
+        setForgotPasswordStep('otp');
+      } else {
+        setLoginStep('password');
+      }
     }, 1500);
   };
   
   const handleLogin = () => {
-    if (!verifyOtp(otp)) {
-      toast.error('Invalid OTP. Please try again.', {
+    if (!password) {
+      toast.error('Please enter your password', {
         style: {
           background: '#ef4444',
           color: '#fff',
@@ -122,6 +133,72 @@ const AuthModal = ({ isOpen, onClose }) => {
       });
       handleClose();
     }, 1500);
+  };
+  
+  const handleResetPassword = () => {
+    if (!password || !confirmPassword) {
+      toast.error('Please fill in all required fields', {
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#ef4444',
+        }
+      });
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match', {
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#ef4444',
+        }
+      });
+      return;
+    }
+    
+    setIsLoading(true);
+    // Simulate password reset
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success('Password reset successfully! Please login with your new password.', {
+        style: {
+          background: '#10b981',
+          color: '#fff',
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#10b981',
+        }
+      });
+      setLoginStep('email');
+      setForgotPasswordStep('email');
+    }, 1500);
+  };
+  
+  const handleForgotPasswordOtp = () => {
+    if (!verifyOtp(otp)) {
+      toast.error('Invalid OTP. Please try again.', {
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#ef4444',
+        }
+      });
+      return;
+    }
+    
+    setForgotPasswordStep('newPassword');
   };
   
   const handleSignupNext = () => {
@@ -188,8 +265,40 @@ const AuthModal = ({ isOpen, onClose }) => {
         return;
       }
       
+      setSignupStep('upi');
+    } else if (signupStep === 'upi') {
+      if (!upiId) {
+        toast.error('Please enter your UPI ID', {
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+          iconTheme: {
+            primary: '#fff',
+            secondary: '#ef4444',
+          }
+        });
+        return;
+      }
+      
+      // Basic UPI ID validation
+      if (!upiId.includes('@')) {
+        toast.error('Please enter a valid UPI ID (e.g., name@upi)', {
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+          iconTheme: {
+            primary: '#fff',
+            secondary: '#ef4444',
+          }
+        });
+        return;
+      }
+      
       setSignupStep('password');
     } else {
+      // Password step
       if (!password || !confirmPassword) {
         toast.error('Please fill in all required fields', {
           style: {
@@ -203,7 +312,22 @@ const AuthModal = ({ isOpen, onClose }) => {
         });
         return;
       }
-      
+
+      // Password length validation
+      if (password.length < 8) {
+        toast.error('Password must be at least 8 characters', {
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+          iconTheme: {
+            primary: '#fff',
+            secondary: '#ef4444',
+          }
+        });
+        return;
+      }
+
       if (password !== confirmPassword) {
         toast.error('Passwords do not match', {
           style: {
@@ -217,7 +341,6 @@ const AuthModal = ({ isOpen, onClose }) => {
         });
         return;
       }
-      
       setIsLoading(true);
       // Simulate account creation
       setTimeout(() => {
@@ -244,8 +367,16 @@ const AuthModal = ({ isOpen, onClose }) => {
         if (activeTab === 'login') {
           if (loginStep === 'email') {
             handleSendOtp();
-          } else {
+          } else if (loginStep === 'password') {
             handleLogin();
+          } else if (loginStep === 'forgotPassword') {
+            if (forgotPasswordStep === 'email') {
+              handleSendOtp();
+            } else if (forgotPasswordStep === 'otp') {
+              handleForgotPasswordOtp();
+            } else {
+              handleResetPassword();
+            }
           }
         } else {
           handleSignupNext();
@@ -255,7 +386,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, activeTab, loginStep, signupStep, email, otp, phone, firstName, lastName, password, confirmPassword, dob, city, favoriteMap]);
+  }, [isOpen, activeTab, loginStep, signupStep, forgotPasswordStep, email, otp, phone, firstName, lastName, password, confirmPassword, dob, city, favoriteMap, upiId]);
   
   const renderLoginContent = () => {
     if (loginStep === 'email') {
@@ -288,7 +419,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             onClick={handleSendOtp} 
             fullWidth
             isLoading={isLoading}
-            loadingText="Sending OTP..."
+            loadingText="Verifying..."
           >
             Continue
           </Button>
@@ -315,59 +446,223 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
         </div>
       );
-    }
-    
-    return (
-      <div className="space-y-5">
-        <div className="text-center mb-2">
-          <h3 className="text-xl font-bold text-white">Verify Your Identity</h3>
-          <p className="text-gray-400 text-sm mt-1">We sent a code to {email}</p>
-        </div>
-        
-        <div>
-          <label htmlFor="otp" className="block text-sm font-medium text-gray-300 mb-1">
-            Enter OTP
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              id="otp"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              placeholder="Enter 6-digit OTP"
-              maxLength={6}
-            />
-            <Shield className="absolute right-3 top-3.5 text-gray-400" size={18} />
+    } else if (loginStep === 'password') {
+      return (
+        <div className="space-y-5">
+          <div className="text-center mb-2">
+            <h3 className="text-xl font-bold text-white">Welcome Back, Soldier</h3>
+            <p className="text-gray-400 text-sm mt-1">Enter your password to continue</p>
           </div>
-        </div>
-        
-        <Button 
-          variant="primary" 
-          onClick={handleLogin} 
-          fullWidth
-          isLoading={isLoading}
-          loadingText="Verifying..."
-        >
-          Login
-        </Button>
-        
-        <div className="text-center">
-          <button
-            onClick={() => {
-              handleSendOtp();
-              toast('OTP resent successfully!', {
-                icon: '🔄',
-                position: 'bottom-center',
-              });
-            }}
-            className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+          
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Enter your password"
+              />
+              <Lock className="absolute right-3 top-3.5 text-gray-400" size={18} />
+            </div>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => {
+                setLoginStep('forgotPassword');
+                setForgotPasswordStep('email');
+              }}
+              className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+            >
+              Forgot Password?
+            </button>
+            
+            <button
+              onClick={() => handleTabChange('signup')}
+              className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+            >
+              Create New Account
+            </button>
+          </div>
+          
+          <Button 
+            variant="primary" 
+            onClick={handleLogin} 
+            fullWidth
+            isLoading={isLoading}
+            loadingText="Logging in..."
           >
-            Resend OTP
-          </button>
+            Login
+          </Button>
         </div>
-      </div>
-    );
+      );
+    } else if (loginStep === 'forgotPassword') {
+      if (forgotPasswordStep === 'email') {
+        return (
+          <div className="space-y-5">
+            <div className="text-center mb-2">
+              <h3 className="text-xl font-bold text-white">Reset Your Password</h3>
+              <p className="text-gray-400 text-sm mt-1">Enter the email you used to create your account</p>
+            </div>
+            
+            <div>
+              <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-300 mb-1">
+                Email Address
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  id="forgot-email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="Enter your email"
+                />
+                <Mail className="absolute right-3 top-3.5 text-gray-400" size={18} />
+              </div>
+            </div>
+            
+            <Button 
+              variant="primary" 
+              onClick={handleSendOtp} 
+              fullWidth
+              isLoading={isLoading}
+              loadingText="Sending OTP..."
+            >
+              Send OTP
+            </Button>
+            
+            <div className="text-center">
+              <button
+                onClick={() => setLoginStep('password')}
+                className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+              >
+                Back to Login
+              </button>
+            </div>
+          </div>
+        );
+      } else if (forgotPasswordStep === 'otp') {
+        return (
+          <div className="space-y-5">
+            <div className="text-center mb-2">
+              <h3 className="text-xl font-bold text-white">Verify Your Identity</h3>
+              <p className="text-gray-400 text-sm mt-1">We sent a code to {email}</p>
+            </div>
+            
+            <div>
+              <label htmlFor="forgot-otp" className="block text-sm font-medium text-gray-300 mb-1">
+                Enter OTP
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  id="forgot-otp"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="Enter 6-digit OTP"
+                  maxLength={6}
+                />
+                <Shield className="absolute right-3 top-3.5 text-gray-400" size={18} />
+              </div>
+            </div>
+            
+            <Button 
+              variant="primary" 
+              onClick={handleForgotPasswordOtp} 
+              fullWidth
+              isLoading={isLoading}
+              loadingText="Verifying..."
+            >
+              Verify OTP
+            </Button>
+            
+            <div className="text-center">
+              <button
+                onClick={() => {
+                  handleSendOtp();
+                  toast('OTP resent successfully!', {
+                    icon: '🔄',
+                    position: 'bottom-center',
+                  });
+                }}
+                className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+              >
+                Resend OTP
+              </button>
+            </div>
+          </div>
+        );
+      } else {
+        return (
+          <div className="space-y-5">
+            <div className="text-center mb-2">
+              <h3 className="text-xl font-bold text-white">Set New Password</h3>
+              <p className="text-gray-400 text-sm mt-1">Set your new password and remember it</p>
+            </div>
+            
+            <div>
+              <label htmlFor="new-password" className="block text-sm font-medium text-gray-300 mb-1">
+                New Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  id="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="Enter new password (min 8 characters)"
+                />
+                <Lock className="absolute right-3 top-3.5 text-gray-400" size={18} />
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="confirm-new-password" className="block text-sm font-medium text-gray-300 mb-1">
+                Confirm New Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  id="confirm-new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="Confirm your new password"
+                />
+                <Lock className="absolute right-3 top-3.5 text-gray-400" size={18} />
+              </div>
+            </div>
+            
+            <Button 
+              variant="primary" 
+              onClick={handleResetPassword} 
+              fullWidth
+              isLoading={isLoading}
+              loadingText="Resetting..."
+            >
+              Reset Password
+            </Button>
+            
+            <div className="text-center">
+              <button
+                onClick={() => setLoginStep('password')}
+                className="text-sm text-yellow-500 hover:text-yellow-400 font-medium"
+              >
+                Back to Login
+              </button>
+            </div>
+          </div>
+        );
+      }
+    }
   };
   
   const renderSignupContent = () => {
@@ -376,7 +671,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className="space-y-5">
           <div className="text-center mb-2">
             <h3 className="text-xl font-bold text-white">Join DBGMI</h3>
-            <p className="text-gray-400 text-sm mt-1">Step 1 of 4 - Contact Information</p>
+            <p className="text-gray-400 text-sm mt-1">Step 1 of 6 - Contact Information</p>
           </div>
           
           <div>
@@ -435,7 +730,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className="space-y-5">
           <div className="text-center mb-2">
             <h3 className="text-xl font-bold text-white">Verify Your Email</h3>
-            <p className="text-gray-400 text-sm mt-1">Step 2 of 4 - Verification</p>
+            <p className="text-gray-400 text-sm mt-1">Step 2 of 6 - Verification</p>
             <p className="text-gray-400 text-sm">We sent a code to {email}</p>
           </div>
           
@@ -490,7 +785,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className="space-y-5">
           <div className="text-center mb-2">
             <h3 className="text-xl font-bold text-white">Your Real Name</h3>
-            <p className="text-gray-400 text-sm mt-1">Step 3 of 4 - Personal Information</p>
+            <p className="text-gray-400 text-sm mt-1">Step 3 of 6 - Personal Information</p>
             <p className="text-gray-400 text-xs mt-2">Please enter your legal name (not in-game name) for record keeping</p>
           </div>
           
@@ -548,7 +843,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className="space-y-5">
           <div className="text-center mb-2">
             <h3 className="text-xl font-bold text-white">Player Profile</h3>
-            <p className="text-gray-400 text-sm mt-1">Step 4 of 5 - Gaming Preferences</p>
+            <p className="text-gray-400 text-sm mt-1">Step 4 of 6 - Gaming Preferences</p>
           </div>
           
           <div>
@@ -618,12 +913,58 @@ const AuthModal = ({ isOpen, onClose }) => {
         </div>
       );
     }
+
+    if (signupStep === 'upi') {
+      return (
+        <div className="space-y-5">
+          <div className="text-center mb-2">
+            <h3 className="text-xl font-bold text-white">Payment Information</h3>
+            <p className="text-gray-400 text-sm mt-1">Step 5 of 6 - UPI Details</p>
+          </div>
+
+          <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-4 mb-4">
+            <p className="text-yellow-200 text-sm">
+              <span className="font-semibold">Why we need this:</span> When you win tournaments in the future, 
+              we'll use this UPI ID to send you your well-deserved cash prizes quickly and securely.
+            </p>
+          </div>
+          
+          <div>
+            <label htmlFor="upi-id" className="block text-sm font-medium text-gray-300 mb-1">
+              UPI ID *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="upi-id"
+                value={upiId}
+                onChange={(e) => setUpiId(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="e.g., name@upi or mobile@paytm"
+              />
+              <CreditCard className="absolute right-3 top-3.5 text-gray-400" size={18} />
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Example: name@upi, 9876543210@paytm, etc.</p>
+          </div>
+          
+          <Button 
+            variant="primary" 
+            onClick={handleSignupNext} 
+            fullWidth
+            isLoading={isLoading}
+            loadingText="Continuing..."
+          >
+            Continue
+          </Button>
+        </div>
+      );
+    }
     
     return (
       <div className="space-y-5">
         <div className="text-center mb-2">
           <h3 className="text-xl font-bold text-white">Secure Your Account</h3>
-          <p className="text-gray-400 text-sm mt-1">Step 5 of 5 - Set Password</p>
+          <p className="text-gray-400 text-sm mt-1">Step 6 of 6 - Set Password</p>
         </div>
         
         <div>
@@ -667,7 +1008,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           isLoading={isLoading}
           loadingText="Creating Account..."
         >
-          Join DBGMI
+          Create DBGMI Account
         </Button>
       </div>
     );
