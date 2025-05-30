@@ -1,0 +1,22 @@
+name: Greetings
+
+on:
+  fork:
+  push:
+    branches: [main]
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EddieHubCommunity/gh-action-community/src/welcome@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: "**Hey, ${{ github.actor }}!** 👋 Thank you for opening an issue in **DBGMI-Playzone**!\n\n- We really appreciate your feedback and suggestions. 💡\n- Feel free to explore the project or suggest new ideas.\n- ⭐ Don't forget to star the [repo](https://github.com/mdazfar2/DBGMI-Playzone))!\n\nThanks for being part of DBGMI-Playzone! 🚀"
+          
+          pr-message: "Hey, ${{ github.actor }}! 🎉\n\nThanks for your pull request to **DBGMI-Playzone**.\nA maintainer will review it soon.\nWe appreciate your contribution to improving the project! 🙌"
