@@ -7,7 +7,6 @@ import AuthModal from '../auth/AuthModal';
 const navItems = [
   { name: 'Home', path: '/' },
   { name: 'Tournaments', path: '/tournaments' },
-  { name: 'Register', path: '/register' },
   { name: 'Rules', path: '/rules' },
   { name: 'Leaderboard', path: '/leaderboard' },
   { name: 'Contact', path: '/contact' },
