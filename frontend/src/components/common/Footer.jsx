@@ -104,7 +104,7 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} DBGMI Tournament. All rights reserved.</p>
           <p className="mt-2">
             <a
-              href="https://www.azfaralam.xyz/"
+              href="https://github.com/mdazfar2/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"
